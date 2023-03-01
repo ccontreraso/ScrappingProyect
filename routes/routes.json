@@ -1,0 +1,8 @@
+{
+    "routes":{
+        "api":{
+            "tarjetcredit" : "/api/tarjetcredit",
+            "home" : "/"
+        }
+    }
+}
