@@ -27,4 +27,4 @@ const tarjetCreditSchema = Schema({
     }
 });
 
-module.exports = model('TarjetCredit',tarjetCreditSchema);
+module.exports  = model('TarjetCredit',tarjetCreditSchema);

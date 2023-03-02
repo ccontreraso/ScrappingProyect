@@ -21,6 +21,9 @@ class Server{
         //this.middlewares();
         //Conexion BBDD
 
+        this.app.use(cors());
+        this.app.use(express.json());
+
         this.engine();
         
         this.connectDB();
@@ -38,21 +41,20 @@ class Server{
 
     engine (){
         this.app.set('view engine', 'ejs');
-        this.app.use(express.static(this.path+ '/views'));
-        console.log(this.path);
+        this.app.use(express.static(this.path+ '/public'));
         
     }
 
     routes(){
         
         this.app.use(this.route.routes.api.tarjetcredit, require('../routes/api/tarjetcredit'));
-        this.app.use('/', require('../routes/api/home'));
+        this.app.use(this.route.routes.api.home, require('../routes/api/home'));
         //this.app.get('/', function(req, res){res.json({msg: "PRobando"}) });
 
     }
 
     listen(){
-        this.app.listen(3000, () => {
+        this.app.listen(this.port, () => {
             console.log(`Servidor corriendo en ambiente en el puerto ${this.port}`);
 
         })

@@ -1,45 +1,16 @@
-const {response, request } = require('express');
-const TarjetCreditModel = require('../../models/tarjetcredit');
 const puppeteer = require('puppeteer');
 const mongoose = require('mongoose');
 
+    const scrappingTarjeta = async ( req, res ) => {
+        console.log(JSON.stringify(req.body));
 
-class TarjetCredit{
-
-    getTarjetCredit = async (req = request, res = response) => {
-        try {
-            const {id} = req.params;
-            const user = await TarjetCreditModel.findById(id);
-            res.status(200).json({
-                status : 200,
-                mgs:user
-            }) 
-        } catch (error){
-            console.log(error);  
-            
-        }
-    };
-
-    postTarjetCredit = async (req = request, res = response) => {
-        try {
-            const {montoNacDis,montoNacUti,montoNacTot, montoInterDis, montoInterUti,montoInterTot} = req.body;
-            const tarjetcredit = new TarjetCreditModel(montoNacDis,montoNacUti,montoNacTot, montoInterDis, montoInterUti,montoInterTot)
-            await tarjetcredit.save();
-            res.status(201).json(newTarjectCredit)
-        } catch (error) {
-            res.status(400).json({message: error.message});
-
-        }
-    };
-
-    scrappingTarjeta = async (req = request, res = response) => {
         try {
             
             let scrape = async () => {
-                // data = req.body
-                console.log(req);
-                // console.log(data.id);
-                // console.log(data.pass);
+                data = req.body
+                // console.log(req.body);
+                console.log(data.id);
+                console.log(data.pass);
                 const browser = await puppeteer.launch({headless: false}); //Podemos ver lo que va haciendo con el headless = false
                 const page = await browser.newPage(); //Interactúa con las paginas
                 await page.setViewport({width : 1920, height : 1080});
@@ -121,6 +92,6 @@ class TarjetCredit{
         }
     }
 
-}
 
-module.exports = TarjetCredit;
+
+module.exports = { scrappingTarjeta };
