@@ -1,6 +1,14 @@
 const {Schema, model} = require('mongoose');
 
 const tarjetCreditSchema = Schema({
+    rutCliente :{
+        type: String,
+        require: true
+    },
+    nombreBanco :{
+        type:String,
+        require : true
+    },
     montoNacDisp : {
         type: String,
         require: true

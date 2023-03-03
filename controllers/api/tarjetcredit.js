@@ -32,15 +32,13 @@ class TarjetCredit{
         }
     };
 
-    scrappingTarjeta = async (req = request, res = response) => {
+    scrappingTarjetaEdwards = async (req = request, res = response) => {
         try {
-            
-            let scrape = async () => {
                 console.log(JSON.stringify(req.body));
                 const data = req.body; 
-                const rut = data.rut;
+                const rutCliente = data.rut;
                 const pass = data.pass;
-                console.log(rut);
+                console.log(rutCliente);
                 console.log(pass);
                 const browser = await puppeteer.launch({headless: false}); //Podemos ver lo que va haciendo con el headless = false
                 const page = await browser.newPage(); //Interactúa con las paginas
@@ -50,7 +48,6 @@ class TarjetCredit{
                 //Seleccionar
                 let elementToClick = '#pbec_header-link-banco_en_linea';
                 await page.waitForSelector(elementToClick);
-        
                 await Promise.all([
                     page.click(elementToClick),
                     page.waitForNavigation({waitUntil: 'networkidle2'}),
@@ -80,6 +77,7 @@ class TarjetCredit{
                 
         
                 const result = await page.evaluate(() => {
+                    let nombreBanco = "Banco Edwards";
                     let montoNacDis = document.querySelector("#main > fenix-tarjeta-credito-persona-root > div > div > ui-view > fenix-main > section > ui-view > fenix-saldo-movimiento-no-facturados > div.row.mb-5.ng-star-inserted > div.col-12.col-lg-6.mb-4.mb-lg-0.col-print-6 > div > div.summary-header > div.summary-header-lead.pt-0 > div:nth-child(2) > div:nth-child(1) > span").innerText;
                     let montoNacUti = document.querySelector("#main > fenix-tarjeta-credito-persona-root > div > div > ui-view > fenix-main > section > ui-view > fenix-saldo-movimiento-no-facturados > div.row.mb-5.ng-star-inserted > div.col-12.col-lg-6.mb-4.mb-lg-0.col-print-6 > div > div.summary-header > div.summary-header-lead.pt-0 > div:nth-child(2) > div.col-12.col-sm-6.mt-sm-0.mt-2.ta-sm-r.col-print-6.mt-print-0.ta-print-r > span").innerText;
                     let montoNacTot = document.querySelector("#main > fenix-tarjeta-credito-persona-root > div > div > ui-view > fenix-main > section > ui-view > fenix-saldo-movimiento-no-facturados > div.row.mb-5.ng-star-inserted > div.col-12.col-lg-6.mb-4.mb-lg-0.col-print-6 > div > div.summary-body > div > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > span").innerText;
@@ -87,6 +85,8 @@ class TarjetCredit{
                     let montoInterUti = document.querySelector("#main > fenix-tarjeta-credito-persona-root > div > div > ui-view > fenix-main > section > ui-view > fenix-saldo-movimiento-no-facturados > div.row.mb-5.ng-star-inserted > div:nth-child(2) > div > div.summary-header > div.summary-header-lead.pt-0 > div:nth-child(2) > div.col-12.col-sm-6.mt-sm-0.mt-2.ta-sm-r.col-print-6.mt-print-0.ta-print-r > span").innerText;
                     let montoInterTot = document.querySelector("#main > fenix-tarjeta-credito-persona-root > div > div > ui-view > fenix-main > section > ui-view > fenix-saldo-movimiento-no-facturados > div.row.mb-5.ng-star-inserted > div:nth-child(2) > div > div.summary-body > div > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > span").innerText;
                     let tarjetCreditModel = {
+                        rutCliente : rutCliente,
+                        nombreBanco : nombreBanco,
                         montoNacDis : montoNacDis,
                         montoNacUti : montoNacUti,
                         montoNacTot : montoNacTot,
@@ -109,13 +109,8 @@ class TarjetCredit{
                 res.status(201).json({status:201, msg:tarjetcredit})
                 console.log("Se ha guardado correctamente")
                 
-            };
             
-            scrape().then(value => {
-
-                
-                return;
-            });
+            
 
         } catch (error) {
             console.log(error);
@@ -123,9 +118,63 @@ class TarjetCredit{
         }
     }
 
-    scrappingCartola = async (req = request, res = response) => {
+    scrappingTarjetaScotiabank = async (req = request, res = response) => {
+
+
         
-    }
+            console .log(JSON.stringify(req.body));
+            const data = req.body; 
+            const rutCliente = data.rut;
+            const pass = data.pass;
+            console.log(rutCliente);
+            console.log(pass);
+            const browser = await puppeteer.launch({headless: false}); //Podemos ver lo que va haciendo con el headless = false
+            const page = await browser.newPage(); //Interactúa con las paginas
+            await page.setViewport({width : 1920, height : 1080});
+            await page.goto('https://www.scotiabank.cl/login/personas/',[2000, {waitUntil: "domcontentloaded"}]);
+
+            let elementToRut = rutCliente;
+            let elementToPass = pass;
+            await page.type('#Validate_rut',elementToRut);
+            await page.type('#pass',elementToPass);
+
+            let elementToClick = '#loginForm > div > form > input.btnRed.agregar_Ancho.login_pass';
+            await page.waitForSelector(elementToClick);
+            await Promise.all([
+                page.click(elementToClick),
+                page.waitForNavigation({waitUntil: 'networkidle2'}),
+            ]);    
+            
+            elementToClick = '#tarjetas > a';
+            await page.waitForSelector(elementToClick);
+
+            await Promise.all([
+                page.click(elementToClick),
+                page.waitForNavigation({waitUntil: 'networkidle2'}),
+            ]);    
+
+
+            //await page.waitForSelector('a[data-bind="text: title, click: $root.navigate, css: {\'producto-nuevo-link\': (productoNuevo)}"]',{ visible: true, timeout: 5000 });
+            const elemento = await page.$('#tarjetas > ul > li:nth-child(1) > p:nth-child(3)');
+            const elementBox = await elemento.boundingBox();
+            await elemento.click();
+            
+            console.log(elementBox); // Devuelve un objeto con las coordenadas del elemento
+
+
+
+
+            }
+            
+            // await Promise.all([
+            //     page.click(elementToClick),
+            //     page.waitForNavigation({waitUntil: 'networkidle2'}),
+ 
+            //     //<a href="javascript:void(0);" data-bind="text: title, click: $root.navigate, css: {'producto-nuevo-link': (productoNuevo)}" class="">Ver movimientos facturados</a>
+            // ]); 
+            
+            
+    
 
 }
 

@@ -2,14 +2,14 @@ function scrapping1(){
 
     var txt_rut = document.getElementById("txt_rut").value
     var txt_password = document.getElementById("txt_password").value;
-    let ruta = 'http://localhost:3000/tarjetcredit/scrappingTarjeta';
+    let ruta = 'http://localhost:3000/tarjetcredit/scrappingTarjetaScotiabank';
 
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
     var raw = JSON.stringify({
         "rut": txt_rut,
-        "pass": txt_password
+        "pass": txt_password 
     });
 
     console.log(raw);
