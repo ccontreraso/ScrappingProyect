@@ -8,7 +8,7 @@ function scrapping1(){
     myHeaders.append("Content-Type", "application/json");
 
     var raw = JSON.stringify({
-        "id": txt_rut,
+        "rut": txt_rut,
         "pass": txt_password
     });
 

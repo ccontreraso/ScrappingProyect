@@ -36,10 +36,12 @@ class TarjetCredit{
         try {
             
             let scrape = async () => {
-                // data = req.body
-                console.log(req);
-                // console.log(data.id);
-                // console.log(data.pass);
+                console.log(JSON.stringify(req.body));
+                const data = req.body; 
+                const rut = data.rut;
+                const pass = data.pass;
+                console.log(rut);
+                console.log(pass);
                 const browser = await puppeteer.launch({headless: false}); //Podemos ver lo que va haciendo con el headless = false
                 const page = await browser.newPage(); //Interactúa con las paginas
                 await page.setViewport({width : 1920, height : 1080});
@@ -55,10 +57,10 @@ class TarjetCredit{
                 ]);
         
                 let elementToRut = '#iduserName';
-                await page.type(elementToRut, '198906824');
+                await page.type(elementToRut, rut);
 
                 let elementToPass = 'input[name="userpassword"]';
-                await page.type(elementToPass,'**Aria20')
+                await page.type(elementToPass,pass)
         
                 elementToClick = '#idIngresar';
                 await page.waitForSelector(elementToClick);
@@ -119,6 +121,10 @@ class TarjetCredit{
             console.log(error);
             
         }
+    }
+
+    scrappingCartola = async (req = request, res = response) => {
+        
     }
 
 }

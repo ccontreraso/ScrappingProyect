@@ -1,12 +1,11 @@
 const express = require('express');
-// const TarjetCredit = require('../../controllers/api/tarjetcredit');
+const TarjetCredit = require('../../controllers/api/tarjetcredit');
 const router = express.Router(); 
-// const tarjetcredit = new TarjetCredit();
-const { scrappingTarjeta } = require('../../controllers/tarjetaCredito')
+const tarjetcredit = new TarjetCredit();
 
-// router.post('/', (req,res) =>{ tarjetcredit.postTarjetCredit(req,res)});
+router.post('/', (req,res) =>{ tarjetcredit.postTarjetCredit(req,res)});
 
-router.post('/scrappingTarjeta', scrappingTarjeta);  
+router.post('/scrappingTarjeta', (req,res) => {tarjetcredit.scrappingTarjeta(req,res)});  
 
 
 module.exports = router;
