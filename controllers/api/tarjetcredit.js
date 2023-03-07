@@ -72,7 +72,7 @@ class TarjetCredit{
                 await Promise.all([
                     page.click(elementToClick),
                     page.waitForNavigation({waitUntil: 'networkidle2'}),
-                ]);
+                ]); 
 
                 await page.waitForTimeout(2000);
                 
@@ -156,31 +156,14 @@ class TarjetCredit{
             const elemento = await page.$('#tarjetas > ul > li:nth-child(1) > p:nth-child(3)'); 
             await elemento.click(); 
 
+            // <div class="saldo">
+            //     <p class="text text--small saldo__title">Total disponible</p>
+            //     <h1 class="heading saldo__text">$74.546</h1>
+            // </div>
             
-            // <p data-part="itemContainer" class="fix--submenu--label-responsive">
-            //     <!-- ko ifnot: hasSubmenu -->
-            //     <a href="javascript:void(0);" data-bind="text: title, click: $root.navigate, css: {'producto-nuevo-link': (productoNuevo)}" class="">Saldos y estado de cuenta</a>
-            //     <!-- ko if: productoNuevo --><!-- /ko -->
-            //     <!-- ko if: badgeText --><!-- /ko -->
-            //     <!-- /ko -->
-            //     <!-- ko if: hasSubmenu --><!-- /ko -->
-            //   </p>
-
             await page.waitForTimeout(10000); 
+            //<h1 class="heading saldo__text">$74.546</h1> 
 
-
-            const frame = await page.frames().find(f => f.name() == '#root > div > div.margin-xs-24--top.margin-md-24--top > div > div > div > div.margin-xs-24--top.margin-sm-24--top.margin-md-24--top.margin-lg-24--top > div > div.tab__content.tab__content--active > ul:nth-child(1) > li > div > div > div:nth-child(1) > div.margin-xs-24--bottom.margin-sm-12--bottom.margin-md-12--bottom.margin-lg-12--bottom > div > h1');
-
-            if (frame){
-                await frame.waitForSelector('#headin saldo_text'); 
-            }else{
-                console.log("No se encontro iframe");
-            }
-
-            await page.screenshot({path : 'iframe-screenshot.png'});
-
-
-            //<h1 class="heading saldo__text">$74.546</h1>
             //<p class="text text--small percent-bar__label"><span class="percent-bar__label--value">19%</span> de $400.000</p>
             //await page.waitForSelector('#root > div > div.margin-xs-24--top.margin-md-24--top > div > div > div > div.margin-xs-24--top.margin-sm-24--top.margin-md-24--top.margin-lg-24--top > div > div.tab__content.tab__content--active > ul:nth-child(1) > li > div > div > div:nth-child(1) > div.margin-xs-24--bottom.margin-sm-12--bottom.margin-md-12--bottom.margin-lg-12--bottom > div > h1');
             //const prueba1 = await page.$('#root > div > div.margin-xs-24--top.margin-md-24--top > div > div > div > div.margin-xs-24--top.margin-sm-24--top.margin-md-24--top.margin-lg-24--top > div > div.tab__content.tab__content--active > ul:nth-child(1) > li > div > div > div:nth-child(1) > div.margin-xs-24--bottom.margin-sm-12--bottom.margin-md-12--bottom.margin-lg-12--bottom > div > h1');
@@ -188,13 +171,17 @@ class TarjetCredit{
 
             // const result = await page.evaluate(() => {
 
-            //     let nombreBanco = "Banco Edwards";
-            //     let montoNacDis = document.querySelector("#root > div > div.margin-xs-24--top.margin-md-24--top > div > div > div > div.margin-xs-24--top.margin-sm-24--top.margin-md-24--top.margin-lg-24--top > div > div.tab__content.tab__content--active > ul > li > div > div:nth-child(2) > div:nth-child(1) > div > div > h1").innerText;
-            //     let montoNacUti = document.querySelector("#root > div > div.margin-xs-24--top.margin-md-24--top > div > div > div > div.margin-xs-24--top.margin-sm-24--top.margin-md-24--top.margin-lg-24--top > div > div.tab__content.tab__content--active > ul:nth-child(1) > li > div > div > div:nth-child(2) > div > h1").innerText;
-            //     let montoNacTot = document.querySelector("#root > div > div.margin-xs-24--top.margin-md-24--top > div > div > div > div.margin-xs-24--top.margin-sm-24--top.margin-md-24--top.margin-lg-24--top > div > div.tab__content.tab__content--active > ul:nth-child(1) > li > div > div > div:nth-child(1) > div.hide--xs > p").innerText;
-            //     let montoInterDis = document.querySelector("#root > div > div.margin-xs-24--top.margin-md-24--top > div > div > div > div.margin-xs-24--top.margin-sm-24--top.margin-md-24--top.margin-lg-24--top > div > div.tab__content.tab__content--active > ul:nth-child(2) > li > div > div > div.col-xs-12.col-sm-4.col-md-4.col-lg-4 > div.margin-xs-24--bottom.margin-sm-12--bottom.margin-md-12--bottom.margin-lg-12--bottom > div > h1").innerText;
-            //     let montoInterUti = document.querySelector("#root > div > div.margin-xs-24--top.margin-md-24--top > div > div > div > div.margin-xs-24--top.margin-sm-24--top.margin-md-24--top.margin-lg-24--top > div > div.tab__content.tab__content--active > ul:nth-child(2) > li > div > div > div:nth-child(2) > div > h1").innerText;
-            //     let montoInterTot = document.querySelector("#root > div > div.margin-xs-24--top.margin-md-24--top > div > div > div > div.margin-xs-24--top.margin-sm-24--top.margin-md-24--top.margin-lg-24--top > div > div.tab__content.tab__content--active > ul:nth-child(2) > li > div > div > div.col-xs-12.col-sm-4.col-md-4.col-lg-4 > div.hide--xs > p").innerText;
+            //     const frame = page.frames().find(frame => frame.name() === 'iframe-stage');
+            //     const text = frame.$eval('.heading.saldo__text', element => element.textContent);
+            //     console.log(text);
+
+            //     let nombreBanco = "Banco Scotiabank"
+            //     let montoNacDis = frame.$eval('.heading.saldo_text',element => element.textContent);
+            //     let montoNacUti = frame.$eval('.heading.saldo_text',element => element.textContent);
+            //     let montoNacTot = frame.$eval('.text.text--small.percent-bar__label', element => element.textContent)
+            //     let montoInterDis = frame.$eval(E'.heading.saldo_text', element => element.textContent);
+            //     let montoInterUti = frame.$eval('.heading.saldo_text', element => element.textContent);
+            //     let montoInterTot = frame.$eval('.text.text--small.percent-bar__label', element => element.textContent);
             //     let tarjetCreditModel = {
             //         rutCliente : rutCliente,
             //         nombreBanco : nombreBanco,
