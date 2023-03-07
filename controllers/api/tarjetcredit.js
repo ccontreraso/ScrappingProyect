@@ -36,10 +36,10 @@ class TarjetCredit{
         try {
                 console.log(JSON.stringify(req.body));
                 const data = req.body; 
-                const rutCliente = data.rut;
+                const rut = data.rut;
                 const pass = data.pass;
                 
-                console.log(rutCliente);
+                console.log(rut);
                 console.log(pass);
                 const browser = await puppeteer.launch({headless: false}); //Podemos ver lo que va haciendo con el headless = false
                 const page = await browser.newPage(); //Interactúa con las paginas
@@ -55,7 +55,7 @@ class TarjetCredit{
                 ]);
         
                 let elementToRut = '#iduserName';
-                await page.type(elementToRut, rutCliente);
+                await page.type(elementToRut, rut);
 
                 let elementToPass = 'input[name="userpassword"]';
                 await page.type(elementToPass,pass)
@@ -78,6 +78,7 @@ class TarjetCredit{
                 
         
                 const result = await page.evaluate(() => {
+                    let rutCliente = "198906824";
                     let nombreBanco = "Banco Edwards";
                     let montoNacDis = document.querySelector("#main > fenix-tarjeta-credito-persona-root > div > div > ui-view > fenix-main > section > ui-view > fenix-saldo-movimiento-no-facturados > div.row.mb-5.ng-star-inserted > div.col-12.col-lg-6.mb-4.mb-lg-0.col-print-6 > div > div.summary-header > div.summary-header-lead.pt-0 > div:nth-child(2) > div:nth-child(1) > span").innerText;
                     let montoNacUti = document.querySelector("#main > fenix-tarjeta-credito-persona-root > div > div > ui-view > fenix-main > section > ui-view > fenix-saldo-movimiento-no-facturados > div.row.mb-5.ng-star-inserted > div.col-12.col-lg-6.mb-4.mb-lg-0.col-print-6 > div > div.summary-header > div.summary-header-lead.pt-0 > div:nth-child(2) > div.col-12.col-sm-6.mt-sm-0.mt-2.ta-sm-r.col-print-6.mt-print-0.ta-print-r > span").innerText;
@@ -86,8 +87,8 @@ class TarjetCredit{
                     let montoInterUti = document.querySelector("#main > fenix-tarjeta-credito-persona-root > div > div > ui-view > fenix-main > section > ui-view > fenix-saldo-movimiento-no-facturados > div.row.mb-5.ng-star-inserted > div:nth-child(2) > div > div.summary-header > div.summary-header-lead.pt-0 > div:nth-child(2) > div.col-12.col-sm-6.mt-sm-0.mt-2.ta-sm-r.col-print-6.mt-print-0.ta-print-r > span").innerText;
                     let montoInterTot = document.querySelector("#main > fenix-tarjeta-credito-persona-root > div > div > ui-view > fenix-main > section > ui-view > fenix-saldo-movimiento-no-facturados > div.row.mb-5.ng-star-inserted > div:nth-child(2) > div > div.summary-body > div > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > span").innerText;
                     let tarjetCreditModel = {
-                        rutCliente : data.rut,
-                        nombreBanco : nombreBanco,
+                        rutCliente : rutCliente,
+                        nombreBanco : nombreBanco, 
                         montoNacDis : montoNacDis,
                         montoNacUti : montoNacUti,
                         montoNacTot : montoNacTot,
@@ -155,8 +156,7 @@ class TarjetCredit{
             const elemento = await page.$('#tarjetas > ul > li:nth-child(1) > p:nth-child(3)'); 
             await elemento.click(); 
 
-
-
+            
             // <p data-part="itemContainer" class="fix--submenu--label-responsive">
             //     <!-- ko ifnot: hasSubmenu -->
             //     <a href="javascript:void(0);" data-bind="text: title, click: $root.navigate, css: {'producto-nuevo-link': (productoNuevo)}" class="">Saldos y estado de cuenta</a>
@@ -169,20 +169,22 @@ class TarjetCredit{
             await page.waitForTimeout(10000); 
 
 
+            const frame = await page.frames().find(f => f.name() == '#root > div > div.margin-xs-24--top.margin-md-24--top > div > div > div > div.margin-xs-24--top.margin-sm-24--top.margin-md-24--top.margin-lg-24--top > div > div.tab__content.tab__content--active > ul:nth-child(1) > li > div > div > div:nth-child(1) > div.margin-xs-24--bottom.margin-sm-12--bottom.margin-md-12--bottom.margin-lg-12--bottom > div > h1');
 
+            if (frame){
+                await frame.waitForSelector('#headin saldo_text'); 
+            }else{
+                console.log("No se encontro iframe");
+            }
+
+            await page.screenshot({path : 'iframe-screenshot.png'});
+
+
+            //<h1 class="heading saldo__text">$74.546</h1>
             //<p class="text text--small percent-bar__label"><span class="percent-bar__label--value">19%</span> de $400.000</p>
             //await page.waitForSelector('#root > div > div.margin-xs-24--top.margin-md-24--top > div > div > div > div.margin-xs-24--top.margin-sm-24--top.margin-md-24--top.margin-lg-24--top > div > div.tab__content.tab__content--active > ul:nth-child(1) > li > div > div > div:nth-child(1) > div.margin-xs-24--bottom.margin-sm-12--bottom.margin-md-12--bottom.margin-lg-12--bottom > div > h1');
             //const prueba1 = await page.$('#root > div > div.margin-xs-24--top.margin-md-24--top > div > div > div > div.margin-xs-24--top.margin-sm-24--top.margin-md-24--top.margin-lg-24--top > div > div.tab__content.tab__content--active > ul:nth-child(1) > li > div > div > div:nth-child(1) > div.margin-xs-24--bottom.margin-sm-12--bottom.margin-md-12--bottom.margin-lg-12--bottom > div > h1');
             // Obtener un arreglo de todos los elementos h1 con la clase 'heading saldo__text'
-            const elementos = await page.$$('.heading.saldo__text');
-
-            // Seleccionar el segundo elemento del arreglo
-            const segundoElemento = elementos[0];
-
-            // Obtener el contenido del elemento seleccionado
-            const contenido = await segundoElemento.evaluate((element) => element.textContent);
-
-            console.log('El contenido del segundo elemento h1 es:', contenido);
 
             // const result = await page.evaluate(() => {
 

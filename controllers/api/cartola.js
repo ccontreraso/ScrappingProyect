@@ -1,13 +1,10 @@
-const express = expres();
-const app = expres();
+const {request,response} = require('express');
 const puppeteer = require('puppeteer');
 const CartolaModel = require('../../models/cartola');
 
 class Cartola{
 
-    srappingCartolaEdwards = async (req = app.req ,res = app.res) => {
-
-
+    scrappingCartolaEdwards = async (req = request ,res = response) => {
         try {
             console.log(JSON.stringify(req.body));
             const data = req.body; 

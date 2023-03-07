@@ -2,7 +2,9 @@
     "routes":{
         "api":{
             "tarjetcredit" : "/tarjetcredit",
-            "home" : "/"
+            "home" : "/",
+            "cartola" : "/cartola"
+
         }
     }
 }

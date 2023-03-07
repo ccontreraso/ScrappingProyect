@@ -49,6 +49,7 @@ class Server{
         
         this.app.use(this.route.routes.api.tarjetcredit, require('../routes/api/tarjetcredit'));
         this.app.use(this.route.routes.api.home, require('../routes/api/home'));
+        this.app.use(this.route.routes.api.cartola, require('../routes/api/cartola'))
         //this.app.get('/', function(req, res){res.json({msg: "PRobando"}) });
 
     }
